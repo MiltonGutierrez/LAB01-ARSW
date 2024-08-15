@@ -24,8 +24,8 @@
 2. Complete el método __main__ de la clase CountMainThreads para que:
 	1. Cree 3 hilos de tipo CountThread, asignándole al primero el intervalo [0..99], al segundo [99..199], y al tercero [200..299].
     
-            Primero declaramos el ibnicio y fin del thread y definimos el ciclo para ejecutarlo en el rango que queremos junto con un constructor para finalizar los valores 
-           ![Hilo CountThread](img/ClaseCountThread.png)
+    Primero declaramos el inicio y fin del thread y definimos el ciclo para ejecutarlo en el rango que queremos junto con un constructor para finalizar los valores 
+   ![Hilo CountThread](img/ClaseCountThread.png)
     
 	3. Inicie los tres hilos con 'start()'.
     
