@@ -2,6 +2,11 @@
 ### Escuela Colombiana de Ingeniería
 ### Arquitecturas de Software - ARSW
 ## Ejercicio Introducción al paralelismo - Hilos - Caso BlackListSearch
+#### AUTORES:
+- [Saray Mendivelso](https://github.com/saraygonm)
+- [Milton Gutierrez](https://github.com/MiltonGutierrez)
+
+
 
 
 ### Dependencias:
@@ -18,9 +23,20 @@
 1. De acuerdo con lo revisado en las lecturas, complete las clases CountThread, para que las mismas definan el ciclo de vida de un hilo que imprima por pantalla los números entre A y B.
 2. Complete el método __main__ de la clase CountMainThreads para que:
 	1. Cree 3 hilos de tipo CountThread, asignándole al primero el intervalo [0..99], al segundo [99..199], y al tercero [200..299].
-	2. Inicie los tres hilos con 'start()'.
-	3. Ejecute y revise la salida por pantalla. 
-	4. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
+    
+            Primero declaramos el ibnicio y fin del thread y definimos el ciclo para ejecutarlo en el rango que queremos junto con un constructor para finalizar los valores 
+           ![Hilo CountThread](img/ClaseCountThread.png)
+    
+	3. Inicie los tres hilos con 'start()'.
+    
+         ![Hilo CountThread](img/ClaseCountThreadMainStart.png) 
+	5. Ejecute y revise la salida por pantalla.
+    
+          Observamos euqe usando start() salen en desorden los valores del rango mientras que con run se ejecuta cada rango en orden 
+	7. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
+    
+          Al cambiarlo pudimos evidenciar que usando run los valores se imprimen en el orden que se declaro por thread, y esto ocurre debido a que mientras en run() se ejecuta en el mismo hilo la salida es secuencial a diferencia del start(), pues este  crea un nuevo hilo y ejecuta el método run() de manera concurrente, provocando un comportamiento de multithreading y esto genera que cambie el orden de salida.
+    ![ run() CountThread](img/ClaseCountThreadMainRun.png)
 
 **Parte II - Ejercicio Black List Search**
 
