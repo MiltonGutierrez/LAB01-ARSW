@@ -1,0 +1,46 @@
+
+package edu.eci.arsw.blacklistvalidator;
+import edu.eci.arsw.spamkeywordsdatasource.HostBlacklistsDataSourceFacade;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class BlackListThread extends Thread{
+    private int start;
+    private int end;
+    private String ipaddress;
+    private int ocurrencesCount = 0;
+    private LinkedList<Integer> blackListOcurrences=new LinkedList<>();
+    @Override
+    public void run() {
+
+        HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
+
+        int checkedListsCount=0;
+
+        for (int i = this.start ; i < this.end;i++){
+            checkedListsCount++;
+            if (skds.isInBlackListServer(i, this.ipaddress)){
+                 
+                blackListOcurrences.add(i);
+                    
+                this.ocurrencesCount++;
+             }
+        }    
+
+        LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
+
+    }
+    /
+    public int getOcurrences(){
+        return 0;
+    }
+    
+    public BlackListThread(int start, int end, String ipaddress){
+        this.start = start;
+        this.end = end;
+        this.ipaddress = ipaddress;
+    }  
+
+}
