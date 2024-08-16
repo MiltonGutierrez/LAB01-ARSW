@@ -24,21 +24,22 @@
    
 ##### 2. Complete el método __main__ de la clase CountMainThreads para que:
  1. Cree 3 hilos de tipo CountThread, asignándole al primero el intervalo [0..99], al segundo [99..199], y al tercero [200..299].
+    
     Primero declaramos los parametros de inicio y fin del thread y definimos el ciclo para ejecutarlo en el rango que queremos junto con un constructor para finalizar los valores 
 	   <p align="center">
 	      <img src="img/ClaseCountThread.png" alt="Hilo CountThread" width="700px">
 	   </p>
   
     
-2. Inicie los tres hilos con 'start()'.
+3. Inicie los tres hilos con 'start()'.
 	<p align="center">
 	<img src="img/ClaseCountThreadMainStart.png" alt="Hilo CountThread" width="700px">
 	</p>
      
-3. Ejecute y revise la salida por pantalla.
+4. Ejecute y revise la salida por pantalla.
     
     Observamos euqe usando start() salen en desorden los valores del rango mientras que con run se ejecuta cada rango en orden 
-4. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
+5. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
     
     Al cambiarlo pudimos evidenciar que usando run los valores se imprimen en el orden que se declaro por thread, y esto ocurre debido a que mientras en run() se ejecuta en el mismo hilo la salida es secuencial a diferencia del start(), pues este  crea un nuevo hilo y ejecuta el método run() de manera concurrente, provocando un comportamiento de multithreading y haciendo que cambie el orden de salida.
 	  <p align="center">
