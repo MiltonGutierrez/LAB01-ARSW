@@ -10,16 +10,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  *
  * @author hcadavid
  */
 public class HostBlackListsValidator {
-
     private static final int BLACK_LIST_ALARM_COUNT=5;
-    
-    
+
     /**
      * Check the given host's IP address in all the available black lists,
      * and report it as NOT Trustworthy when such IP was reported in at least
@@ -30,13 +29,17 @@ public class HostBlackListsValidator {
      * @param ipaddress suspicious host's IP address.
      * @return  Blacklists numbers where the given host's IP address was found.
      */
-    public List<Integer> checkHost(String ipaddress, int N){
+    public List<Integer> checkHost(String ipaddress, int N, int cant){
         LinkedList<Integer> blackListOcurrences=new LinkedList<>();
-        for(int i = 0; i <= N; i ++){
-            
-        }   
-        return blackListOcurrences;
+        //for(int i = 0; i <= N; i ++){
+        Distribution distribution = new Distribution(cant,N);
+        int[] parts = distribution.getArray(); //divide en N partes
+        ArrayList<BlackListThread> threads = new ArrayList<>();
+
+
+        return blackListOccurrences;
     }
+}
     
     
     private static final Logger LOG = Logger.getLogger(HostBlackListsValidator.class.getName());
