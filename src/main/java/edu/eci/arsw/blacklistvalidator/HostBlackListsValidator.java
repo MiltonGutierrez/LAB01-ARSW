@@ -32,15 +32,13 @@ public class HostBlackListsValidator {
      */
     public List<Integer> checkHost(String ipaddress, int N){
         LinkedList<Integer> blackListOcurrences=new LinkedList<>();
-        //for(int i = 0; i <= N; i ++){
-        //Distribution distribution = new Distribution(cant,N);
-        //int[] parts = distribution.getArray(); //divide en N partes
-
-        List<Integer> blackListOccurrences = new LinkedList<>();
         ArrayList<BlackListThread> threads = new ArrayList<>();
+        int[][] rangeOfIpsForEachThread = distributorOfIps(N);
+        for(int i = 0; i < N; i++){
+            threads.add(new BlackListThread(rangeOfIpsForEachThread[i][0], rangeOfIpsForEachThread[i][1], ""));
+        }
 
-
-        return blackListOccurrences;
+        return blackListOcurrences;
     }
     
     public int[][] distributorOfIps(int N){
