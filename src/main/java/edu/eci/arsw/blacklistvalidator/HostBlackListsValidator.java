@@ -29,14 +29,41 @@ public class HostBlackListsValidator {
      * NOT Trustworthy, and the list of the five blacklists returned.
      * @param ipaddress suspicious host's IP address.
      * @return  Blacklists numbers where the given host's IP address was found.
+     * @throws InterruptedException 
      */
     public List<Integer> checkHost(String ipaddress, int N){
+        HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
         LinkedList<Integer> blackListOcurrences=new LinkedList<>();
         ArrayList<BlackListThread> threads = new ArrayList<>();
         int[][] rangeOfIpsForEachThread = distributorOfIps(N);
+        int ocurrencesCount = 0;
+        int checkedListsCount = 0;
         for(int i = 0; i < N; i++){
-            threads.add(new BlackListThread(rangeOfIpsForEachThread[i][0], rangeOfIpsForEachThread[i][1]));
+            threads.add(new BlackListThread(rangeOfIpsForEachThread[i][0], rangeOfIpsForEachThread[i][1], ipaddress));
         }
+        for(BlackListThread b: threads){
+            b.start();
+        }
+        for(BlackListThread b: threads){
+            try {
+                b.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            blackListOcurrences.addAll(b.getBlackListOcurrences());
+            ocurrencesCount += b.getOcurrencesCount();
+            checkedListsCount += b.getCheckedLists();
+        }
+        if (ocurrencesCount>=BLACK_LIST_ALARM_COUNT){
+            skds.reportAsNotTrustworthy(ipaddress);
+        }
+        else{
+            skds.reportAsTrustworthy(ipaddress);
+        }                
+        
+        LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
+        
         return blackListOcurrences;
     }
     public int[][] distributorOfIps(int N){
@@ -69,7 +96,8 @@ public class HostBlackListsValidator {
             return rangeOfIpsForEachThread;
         }
     }
-    public List<Integer> checkHost(String ipaddress){
+
+    /*public List<Integer> checkHost(String ipaddress){
         
         LinkedList<Integer> blackListOcurrences=new LinkedList<>();
         
@@ -100,7 +128,8 @@ public class HostBlackListsValidator {
         LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
         
         return blackListOcurrences;
-    }
+    }*/
+
     private static final Logger LOG = Logger.getLogger(HostBlackListsValidator.class.getName());
 
 }

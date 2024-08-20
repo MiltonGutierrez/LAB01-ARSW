@@ -9,36 +9,45 @@ public class BlackListThread extends Thread{
     private static final int BLACK_LIST_ALARM_COUNT=5; //direccion registrada 5 veces
     private int start;
     private int end;
-    private int ocurrencesCount = 0;
-    private int checkedListsCount = 0;
+    private int ocurrencesCount;
+    private int checkedListsCount;
+    private String ipAddress;
     private LinkedList<Integer> blackListOcurrences=new LinkedList<>();
-    HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
     @Override
-
     public void run() {
-        for (int i = this.start ; i < this.end && ocurrencesCount<BLACK_LIST_ALARM_COUNT ;i++){
-            checkedListsCount++;
-            // if (){
+        HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
+        for (int i = this.start ; i <= this.end && ocurrencesCount<BLACK_LIST_ALARM_COUNT ;i++){
+        
+            this.checkedListsCount++; 
+
+            if (skds.isInBlackListServer(i, ipAddress)){
+                
                 blackListOcurrences.add(i);
+                
                 this.ocurrencesCount++;
-                System.out.println(ocurrencesCount);
-             }
+            }
+        }
     }    
 
     //LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
-    public BlackListThread(int start, int end){
+    public BlackListThread(int start, int end, String ipAddress){
         this.start = start;
         this.end = end;
+        this.ipAddress = ipAddress;
         this.ocurrencesCount = 0;
         this.checkedListsCount = 0;
     }
     
     public int getCheckedLists() {
-        return checkedListsCount;
+        return this.checkedListsCount;
     }
     
     public int getOcurrencesCount() {
-        return ocurrencesCount;
+        return this.ocurrencesCount;
+    }
+
+    public LinkedList<Integer> getBlackListOcurrences(){
+        return this.blackListOcurrences;
     }
 }
 
