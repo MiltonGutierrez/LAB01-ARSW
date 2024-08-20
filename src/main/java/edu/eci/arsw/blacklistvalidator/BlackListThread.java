@@ -27,24 +27,22 @@ public class BlackListThread extends Thread{
         }    
 
         //LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
-
+        public BlackListThread(int start, int end, String ipaddress){
+            this.start = start;
+            this.end = end;
+            this.ipaddress = ipaddress;
+            this.ocurrencesCount = 0;
+            this.checkedListsCount = 0;
+        }
+    
+        public int getCheckedLists() {
+            return checkedListsCount;
+        }
+    
+        public int getOcurrencesCount() {
+            return ocurrencesCount;
+        }
     }
+
 
     
-    public BlackListThread(int start, int end, String ipaddress){
-        this.start = start;
-        this.end = end;
-        this.ipaddress = ipaddress;
-        this.ocurrencesCount = 0;
-        this.checkedListsCount = 0;
-    }
-
-    public int getCheckedLists() {
-        return checkedListsCount;
-    }
-
-    public int getOcurrencesCount() {
-        return ocurrencesCount;
-    }
-}
-}
