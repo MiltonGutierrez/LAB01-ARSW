@@ -13,6 +13,7 @@ public class BlackListThread extends Thread{
     private int checkedListsCount;
     private String ipAddress;
     private LinkedList<Integer> blackListOcurrences=new LinkedList<>();
+
     @Override
     public void run() {
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
@@ -27,9 +28,14 @@ public class BlackListThread extends Thread{
                 this.ocurrencesCount++;
             }
         }
-    }    
+    }  
 
-    //LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
+    /**
+     * Creates an instances of a BlackListThread, defining the range of the lists and the ipAddress for the BlackListThread.
+     * @param start
+     * @param end
+     * @param ipAddress
+     */
     public BlackListThread(int start, int end, String ipAddress){
         this.start = start;
         this.end = end;
@@ -37,15 +43,27 @@ public class BlackListThread extends Thread{
         this.ocurrencesCount = 0;
         this.checkedListsCount = 0;
     }
-    
+
+    /**
+     * Returns the number of lists checked
+     * @return checkedListsCount
+     */
     public int getCheckedLists() {
         return this.checkedListsCount;
     }
-    
+
+    /**
+     * Returns the number of occurrences found of the ipaddress in the lists
+     * @return
+     */
     public int getOcurrencesCount() {
         return this.ocurrencesCount;
     }
 
+    /**
+     * Returns a linkedlist which contains the number of the list in which the ipaddress was found
+     * @return
+     */
     public LinkedList<Integer> getBlackListOcurrences(){
         return this.blackListOcurrences;
     }
