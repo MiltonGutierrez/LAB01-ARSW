@@ -16,10 +16,19 @@ import javax.print.attribute.SupportedValuesAttribute;
 public class Main {
     
     public static void main(String a[]){
+        long startTime = System.currentTimeMillis();
         HostBlackListsValidator hblv=new HostBlackListsValidator();
-        List<Integer> blackListOcurrences=hblv.checkHost("212.24.24.55", 50);
+        List<Integer> blackListOcurrences=hblv.checkHost("202.24.34.55", 50);
         System.out.println("The host was found in the following blacklists:"+blackListOcurrences);
-
+        long endTime = System.currentTimeMillis();
+        System.out.println("El tiempo total de ejecucion es: " + (endTime - startTime ) + " milisegundos.");
+        Runtime runtime = Runtime.getRuntime();
+        long totalMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long maxMemory = runtime.maxMemory();
+        System.out.println("Memoria total: " + totalMemory);
+        System.out.println("Memoria libre: " + freeMemory);
+        System.out.println("Memoria máxima: " + maxMemory);
     }
     
 }

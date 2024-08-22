@@ -122,15 +122,129 @@ La estrategia de paralelismo antes implementada es ineficiente en ciertos casos,
 
 A partir de lo anterior, implemente la siguiente secuencia de experimentos para realizar las validación de direcciones IP dispersas (por ejemplo 202.24.34.55), tomando los tiempos de ejecución de los mismos (asegúrese de hacerlos en la misma máquina):
 
-1. Un solo hilo.
-2. Tantos hilos como núcleos de procesamiento (haga que el programa determine esto haciendo uso del [API Runtime](https://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html)).
-3. Tantos hilos como el doble de núcleos de procesamiento.
-4. 50 hilos.
-5. 100 hilos.
-
 Al iniciar el programa ejecute el monitor jVisualVM, y a medida que corran las pruebas, revise y anote el consumo de CPU y de memoria en cada caso. ![](img/jvisualvm.png)
 
-Con lo anterior, y con los tiempos de ejecución dados, haga una gráfica de tiempo de solución vs. número de hilos. Analice y plantee hipótesis con su compañero para las siguientes preguntas (puede tener en cuenta lo reportado por jVisualVM):
+#### Para abrir el programa:
+Una vez hemos descargado la carpeta
+`.zip `, la extraemos y nos dirigimos a la subcarpeta `bin `, en donde encontraremos la aplicación.
+	<p align="center">
+	<img src="img/JVvisual_app.png" alt="Hilo CountThread" width="700px">
+	</p>
+### 1. Un solo hilo.	
+Ejecutamos nuestro programa con el fin de validar las direcciones IP dispersas en **un hilo**. Proceso el cual se lleva a cabo en una duración de 175818 milisegundos.
+	<p align="center">
+	<img src="img/hilo1code.png" alt="Hilo CountThread" width="700px">
+	</p>
+
+El monitor Java VisualVM  nos proporciona información sobre el uso de recursos de nuestro programa.
+	<p align="center">
+	<img src="img/hilo1.png" alt="Hilo CountThread" width="700px">
+	</p>
+- **Uso de CPU:** 0%, indica que el programa está mayormente inactivo o en espera.
+- **Actividad de GC:** 0%, sugiere que no se han realizado recolecciones de basura recientes, por lo que la memoria está bajo control.
+- **Heap Metaspace:** De 255 MB, se utilizan aproximadamente 30 MB, mostrando bajo uso de memoria para clases y metadatos.
+- **Clases:** 2,788 clases cargadas, ninguna descargada, con uso constante de las clases.
+- **Hilos:** 15 activos (máximo de 16), la mayoría son hilos de soporte, con un número estable sin fluctuaciones significativas.
+
+
+- Se concluye que el programa no está realizando una cantidad significativa de procesamiento en ese momento. Los recursos (CPU, memoria, e hilos) están estables, sin picos, lo cual podría indicar un estado en el que los hilos están en espera o el sistema está en una fase de baja actividad.
+
+
+### 2. Tantos hilos como núcleos de procesamiento (haga que el programa determine esto haciendo uso del [API Runtime](https://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html)).
+Para saber los núcleos de procesamiento en nuestro pc  nos dirigimos a nuestro administrador de tareas  y ejecutamos el siguiente comando
+	<p align="center">
+	<img src="img/explicacion_hilo2.png" alt="Hilo CountThread" width="700px">
+	</p>
+Cambiamos nuestro número de hilos por 8 y el tiempo de ejecución se redujó significativamente a 12961 milisegundos.
+	<p align="center">
+	<img src="img/hilo2code.png" alt="Hilo CountThread" width="700px">
+	</p>
+En cuanto al uso de recursos: 
+	<p align="center">
+	<img src="img/hilo2.png" alt="Hilo CountThread" width="700px">
+	</p>
+- **Uso de CPU:** 0%, sin carga significativa, es decir  inactividad o espera de los hilos.
+- **Actividad de GC:** Ninguna, lo que indica que no se ha liberado memoria recientemente.
+- **Heap Metaspace:** Uso reducido a 17 MB de 255 MB, indicando menor carga de metadatos.
+- **Clases:** 2,777 clases cargadas, sin cambios significativos en las clases descargadas.
+- **Hilos:** Aumento a 23 hilos activos (máximo de 23), con 14 hilos demonio, indicando que el programa gestiona más tareas simultáneas.
+
+
+- Se infiere que el programa ha lanzado más hilos y tiene una menor carga de memoria en la Metaspace. Sin embargo, sigue sin realizar un procesamiento intenso, lo que se refleja en el bajo uso de CPU y la ausencia de actividad en el recolectar basura.
+
+### 3. Tantos hilos como el doble de núcleos de procesamiento.
+El número de hilos se duplica en relación con el  anterior a 16 y el tiempo de ejecución baja a 5839 milisegundos.
+	<p align="center">
+	<img src="img/hilo3code.png" alt="Hilo CountThread" width="700px">
+	</p>
+En cuanto al uso de recursos:
+	<p align="center">
+	<img src="img/hilo3.png" alt="Hilo CountThread" width="700px">
+	</p>
+
+- **Uso de CPU:** Valor negativo (-18.1%), la carga de CPU es mínima o mal registrada.
+- **Actividad de GC:** Aumento al 18.1%,  el programa está liberando memoria de forma más activa.
+- **Heap Metaspace:** De 45 MB, se utilizan 33 MB. Hay un aumento en el uso de memoria con fluctuaciones observadas.
+- **Clases:** 7,917 clases cargadas, mucho más que en los hilos anteriores, sin clases descargadas.
+- **Hilos:** 21 activos (pico de 25), con 17 hilos demonio, mostrando un patrón dinámico y fluctuante.
+ 
+
+- El programa está gestionando más memoria e hilos, con un aumento en la carga de clases y una mayor actividad de recolección de basura, sugiriendo tareas más complejas y cambios dinámicos en el sistema.
+
+### 4. 50 hilos.
+Con un tiempo de ejecución de 1934 milisegundos.
+<p align="center">
+<img src="img/hilo4code.png" alt="Hilo CountThread" width="700px">
+</p>
+
+En cuanto al uso de recursos:
+	<p align="center">
+	<img src="img/hilo4.png" alt="Hilo CountThread" width="700px">
+	</p>
+
+- **Uso de CPU:** ses bajo, es decir la aplicación no está realizando operaciones intensivas.
+- **Actividad de GC:** se ha liberado memoria. La falta de actividad en la gráfica de "GC activity" sugiere que la liberación de memoria ocurrió de forma natural
+- **Heap Metaspace:** Disminución del uso de la memoria heap
+- **Clases:** El número de clases cargadas se mantiene constante
+- **Hilos:** Reducción ligera en el número de hilos activos de 42 a 40 y en hilos daemon de 29 a 27. 
+
+
+-  Esto podría reflejar una fase ociosa o la finalización de tareas ligeras, manteniendo la aplicación en un estado estable sin signos de estrés.
+
+### 5. 100 hilos.
+Con un tiempo de ejecución de 1055 milisegundos.
+<p align="center">
+<img src="img/hilo5code.png" alt="Hilo CountThread" width="700px">
+</p>
+
+En cuanto al uso de recursos:
+<p align="center">
+<img src="img/hilo5.png" alt="Hilo CountThread" width="700px">
+</p>
+
+- **Uso de CPU:** Uso extremadamente bajo, cercano al 0%, la aplicación no está realizando operaciones intensivas en la CPU.
+- **Actividad de GC:*** Utiliza aproximadamente 343. con poca o ninguna actividad de recolección de basura.
+- **Heap Metaspace:** No muestra problemas de espacio o carga excesiva.
+- **Clases:**  clases cargadas sin ninguna descargada, lo cual es normal para aplicaciones Java.
+- **Hilos:**:  pico de 59 hilos, sin cambios significativos en el número de hilos.
+
+
+- La aplicación parece estar en un estado estable, con bajo uso de CPU, utilización moderada de memoria, y un número constante de hilos, lo que sugiere que está en una fase de baja actividad o realizando tareas ligeras.
+
+#### Con lo anterior, y con los tiempos de ejecución dados, haga una gráfica de tiempo de solución vs. número de hilos. Analice y plantee hipótesis con su compañero para las siguientes preguntas (puede tener en cuenta lo reportado por jVisualVM):
+
+| Hilos (unidad) | Tiempo (milisegundos) |
+|----------------|------------------------|
+| 1              | 175818                 |
+| 8              | 12961                  |
+| 16             | 5839                   |
+| 50             | 1934                   |
+| 100            | 1055                   |
+
+<img src="img/grafica.png" alt="Hilo CountThread" width="400px">
+</p>
+Se reafirma mediante el grafico que la ejecucion del problema se vuelve mucho más eficiente con un mayor número de hilos, o sea  el proceso puede beneficiarse significativamente de la paralelización.
+
 
 **Parte IV - Ejercicio Black List Search**
 
@@ -138,9 +252,19 @@ Con lo anterior, y con los tiempos de ejecución dados, haga una gráfica de tie
 
 	![](img/ahmdahls.png), donde _S(n)_ es el mejoramiento teórico del desempeño, _P_ la fracción paralelizable del algoritmo, y _n_ el número de hilos, a mayor _n_, mayor debería ser dicha mejora. Por qué el mejor desempeño no se logra con los 500 hilos?, cómo se compara este desempeño cuando se usan 200?. 
 
+	* Al analizar los resultados,  se evidencia que el tiempo de ejecución disminuye considerablemente al aumentar el número de hilos en las primeras etapas. Esto mejora el rendimiento del programa gracias a que se realiza la mayor  paralelización posible. 
+
+   	Al seguir incrementando la cantidad de hilos, cuando llegan a cifras como 200 o 500, la mejora en el rendimiento se vuelve marginal. Esto se debe a que la ley de Amdahl establece un límite en la aceleración posible, debido a la porción secuencial del programa que no puede paralelizarse. 
+    Como resultado, el tiempo de ejecución tiende a estabilizarse, alcanzando un punto en el que aumentar los hilos adicionales no aporta una reducción significativa en el tiempo.
+   
+
 2. Cómo se comporta la solución usando tantos hilos de procesamiento como núcleos comparado con el resultado de usar el doble de éste?.
+
+	* Podríamos suponer que duplicar el número de hilos resultaría en una reducción a la mitad del tiempo de ejecución, pero en la práctica esto no ocurre de manera lineal. Al comparar el rendimiento utilizando tantos hilos como núcleos con el rendimiento al usar el doble de hilos, notamos que el aumento en el rendimiento es marginal. Al pasar de 8 a 16 hilos, el tiempo de ejecución no disminuye de manera significativa debido a factores como la sobrecarga en la gestión de hilos y la porción secuencial del programa, que limita la escalabilidad según lo establece la ley de Amdahl.
+
 
 3. De acuerdo con lo anterior, si para este problema en lugar de 100 hilos en una sola CPU se pudiera usar 1 hilo en cada una de 100 máquinas hipotéticas, la ley de Amdahls se aplicaría mejor?. Si en lugar de esto se usaran c hilos en 100/c máquinas distribuidas (siendo c es el número de núcleos de dichas máquinas), se mejoraría?. Explique su respuesta.
 
+	* Segun lo anterior sabemoos que el número de hilos tiene un impacto en el rendimiento, pero solo hasta un límite. Ejecutar un solo hilo en cada una de 100 máquinas resultaría ineficaz debido a la carga adicional de coordinación y comunicación. En cambio, asignar c hilos a 100/c máquinas (siendo c el número de núcleos) es más eficiente, ya que se aprovecha mejor la paralelización interna sin tanta sobrecarga. No obstante, la mejora aún está restringida por la porción secuencial del proceso.
 
 
