@@ -112,6 +112,9 @@ Para 'refactorizar' este código, y hacer que explote la capacidad multi-núcleo
 **Parte II.I Para discutir la próxima clase (NO para implementar aún)**
 
 La estrategia de paralelismo antes implementada es ineficiente en ciertos casos, pues la búsqueda se sigue realizando aún cuando los N hilos (en su conjunto) ya hayan encontrado el número mínimo de ocurrencias requeridas para reportar al servidor como malicioso. Cómo se podría modificar la implementación para minimizar el número de consultas en estos casos?, qué elemento nuevo traería esto al problema?
+	* Se podría mejorar la estrategia del paralelismo por medio de la implementación un mecanismo de cancelación anticipada o bloqueos para los hilos, es decir cuando ya se obtengan la cantidad mínima de ocurrencias (maliciosas) requeridas, la búsqueda se detenga; logrando así optimizar en gran medida el tiempo de ejecución. 
+ 	* Para llevar a cabo el ajuste anterior necesitaríamos como elemento nuevo una variable 'atómica' la cual se comparte entre hilos, los hilos usarían un método de interrupción ´Thread.interrupt()´al momento de cumplir la condición cerciorarnos de que los hilos verifiquen periódicamente el numero total de ocurrencias.
+
 
 **Parte III - Evaluación de Desempeño**
 
