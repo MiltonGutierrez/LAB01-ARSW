@@ -37,7 +37,7 @@
      
 4. Ejecute y revise la salida por pantalla.
     
-    Observamos euqe usando start() salen en desorden los valores del rango mientras que con run se ejecuta cada rango en orden 
+    Observamos que usando start() se imprimen en desorden los valores del rango, mientras que con run() se ejecuta cada rango en orden.
 5. Cambie el incio con 'start()' por 'run()'. Cómo cambia la salida?, por qué?.
     
     Al cambiarlo pudimos evidenciar que usando run los valores se imprimen en el orden que se declaro por thread, y esto ocurre debido a que mientras en run() se ejecuta en el mismo hilo la salida es secuencial a diferencia del start(), pues este  crea un nuevo hilo y ejecuta el método run() de manera concurrente, provocando un comportamiento de multithreading y haciendo que cambie el orden de salida.
